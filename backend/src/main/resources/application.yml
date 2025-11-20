@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: entrepreneur-platform
+
+supabase:
+  url: ${SUPABASE_URL}
+  anonKey: ${SUPABASE_ANON_KEY}
+  serviceRoleKey: ${SUPABASE_SERVICE_ROLE_KEY}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expMinutes: 60
+
+platform:
+  tables:
+    profiles: profiles
+    businessPlans: business_plans
+    userColumn: user_id
+
+logging:
+  level:
+    com.miapp: DEBUG

@@ -1,0 +1,70 @@
+# Dependencies
+node_modules/
+*/node_modules/
+package-lock.json
+*/package-lock.json
+
+# Build outputs
+dist/
+*/dist/
+target/
+*/target/
+build/
+*/build/
+
+# Environment variables
+.env
+*/.env
+.env.local
+*/.env.local
+.env.production
+*/.env.production
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+*/logs/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*/coverage/
+
+# Maven
+.mvn/
+mvnw
+mvnw.bat
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Database
+*.db
+*.sqlite
+
+# Spring Boot
+spring-boot-logs/
