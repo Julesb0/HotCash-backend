@@ -37,6 +37,16 @@ code {
   margin-bottom: 20px;
 }
 
+/* Estilos para reCAPTCHA */
+.form-group .g-recaptcha {
+  margin: 0 auto;
+  display: table;
+}
+
+.form-group > div[style*="width: 304px"] {
+  margin: 0 auto !important;
+}
+
 .form-group label {
   display: block;
   margin-bottom: 5px;

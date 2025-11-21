@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { postJson } from '../api/client';
 
 function Register() {
@@ -8,11 +9,28 @@ function Register() {
   const [username, setUsername] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const navigate = useNavigate();
+
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+    // Limpiar error cuando el usuario completa reCAPTCHA
+    if (token) {
+      setError('');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    
+    // Validar que reCAPTCHA esté completado
+    if (!recaptchaToken) {
+      setError('Por favor completa el reCAPTCHA');
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -20,13 +38,25 @@ function Register() {
         email,
         password,
         username,
+        recaptchaToken,
       });
 
       localStorage.setItem('token', response.token);
       localStorage.setItem('username', response.username);
       navigate('/dashboard');
     } catch (err) {
-      setError('Registration failed. Please try again.');
+      // Limpiar reCAPTCHA en caso de error
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
+      setRecaptchaToken(null);
+      
+      // Mostrar mensaje de error más específico
+      if (err instanceof Error && err.message.includes('reCAPTCHA')) {
+        setError('reCAPTCHA inválido. Por favor intenta de nuevo.');
+      } else {
+        setError('Registration failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -67,7 +97,15 @@ function Register() {
             required
           />
         </div>
-        <button type="submit" className="btn btn-block" disabled={loading}>
+        <div className="form-group">
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={(import.meta as any).env.VITE_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'}
+            onChange={handleRecaptchaChange}
+            theme="light"
+          />
+        </div>
+        <button type="submit" className="btn btn-block" disabled={loading || !recaptchaToken}>
           {loading ? 'Registering...' : 'Register'}
         </button>
       </form>
