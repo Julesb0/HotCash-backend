@@ -4,6 +4,7 @@ public class RegisterRequest {
     private String email;
     private String password;
     private String username;
+    private String recaptchaToken;
 
     public RegisterRequest() {}
 
@@ -11,6 +12,13 @@ public class RegisterRequest {
         this.email = email;
         this.password = password;
         this.username = username;
+    }
+
+    public RegisterRequest(String email, String password, String username, String recaptchaToken) {
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.recaptchaToken = recaptchaToken;
     }
 
     public String getEmail() {
@@ -35,5 +43,13 @@ public class RegisterRequest {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getRecaptchaToken() {
+        return recaptchaToken;
+    }
+
+    public void setRecaptchaToken(String recaptchaToken) {
+        this.recaptchaToken = recaptchaToken;
     }
 }

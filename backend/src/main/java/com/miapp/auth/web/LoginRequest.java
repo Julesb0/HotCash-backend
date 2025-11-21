@@ -3,12 +3,19 @@ package com.miapp.auth.web;
 public class LoginRequest {
     private String email;
     private String password;
+    private String recaptchaToken;
 
     public LoginRequest() {}
 
     public LoginRequest(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public LoginRequest(String email, String password, String recaptchaToken) {
+        this.email = email;
+        this.password = password;
+        this.recaptchaToken = recaptchaToken;
     }
 
     public String getEmail() {
@@ -25,5 +32,13 @@ public class LoginRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRecaptchaToken() {
+        return recaptchaToken;
+    }
+
+    public void setRecaptchaToken(String recaptchaToken) {
+        this.recaptchaToken = recaptchaToken;
     }
 }

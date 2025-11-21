@@ -1,128 +1,80 @@
-# Railway Deployment Guide for Entrepreneur Platform Backend
+# Despliegue en Railway - Backend
 
-## Prerequisites
-- Railway CLI installed: `npm install -g @railway/cli`
-- Railway account and project created
-- Environment variables configured in Railway dashboard
+## Configuración de Variables de Entorno
 
-## Environment Variables Required
+En Railway, configura las siguientes variables de entorno:
 
-Configure these in your Railway project dashboard:
+### Variables Obligatorias
 
 ```bash
-# Supabase Configuration
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_ANON_KEY=your_supabase_anon_key  
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+# Supabase
+SUPABASE_URL=tu_url_de_supabase
+SUPABASE_ANON_KEY=tu_anon_key_de_supabase
+SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key_de_supabase
 
-# JWT Configuration
-JWT_SECRET=your_jwt_secret_key_at_least_32_characters_long
+# JWT
+JWT_SECRET=tu_secreto_jwt_seguro
 
-# Application Configuration (optional)
-SERVER_PORT=8080
-SPRING_PROFILES_ACTIVE=prod
+# CORS (opcional, tiene valores por defecto)
+CORS_ORIGINS=https://tu-dominio-frontend.vercel.app,https://otro-dominio.com
 ```
 
-## Deployment Steps
+### Variables Opcionales
 
-### 1. Login to Railway
 ```bash
-railway login
+# Puerto (Railway lo asigna automáticamente)
+PORT=8080
+
+# Credenciales de admin (por defecto: admin/admin)
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=tu_contraseña_segura
 ```
 
-### 2. Link your project
-```bash
-railway link
-```
+## Pasos de Despliegue
 
-### 3. Deploy to Railway
-```bash
-railway up
-```
+1. **Conectar repositorio a Railway**:
+   - Ve a railway.app
+   - Crea un nuevo proyecto
+   - Conecta tu repositorio de GitHub
+   - Selecciona el directorio `backend`
 
-### 4. Check deployment status
-```bash
-railway status
-```
+2. **Configurar variables de entorno**:
+   - Ve a Settings > Variables
+   - Añade todas las variables obligatorias
+   - Railway reiniciará automáticamente
 
-### 5. View logs
+3. **Verificar despliegue**:
+   - La URL del backend aparecerá en el dashboard
+   - El endpoint `/actuator/health` debe responder con estado "UP"
+
+4. **Probar endpoints**:
+   - `GET https://tu-backend.railway.app/api/profile/me`
+   - `PUT https://tu-backend.railway.app/api/profile/me`
+
+## Solución de Problemas
+
+### Health Check Fallido
+- Verifica que todas las variables de entorno estén configuradas
+- Revisa los logs en Railway dashboard
+- Asegúrate de que Supabase esté accesible
+
+### CORS Errors
+- Actualiza `CORS_ORIGINS` con el dominio correcto de tu frontend
+- Verifica que el frontend esté usando el URL correcto del backend
+
+### JWT Errors
+- Asegúrate de que `JWT_SECRET` sea el mismo en frontend y backend
+- Verifica que el token se esté enviando correctamente en los headers
+
+## Comandos Útiles
+
 ```bash
+# Ver logs
 railway logs
+
+# Reiniciar servicio
+railway restart
+
+# Variables actuales
+railway variables
 ```
-
-## Build Configuration
-
-The `railway.toml` file configures:
-- **Builder**: Maven for Java projects
-- **Build Command**: `mvn clean package -DskipTests`
-- **Start Command**: `java -jar target/entrepreneur-platform-0.0.1-SNAPSHOT.jar`
-- **Restart Policy**: Automatic restart on failure with max 3 retries
-
-## API Endpoints
-
-Once deployed, your backend will be available at:
-- **Base URL**: `https://your-project.railway.app`
-- **Health Check**: `GET /api/health`
-- **Authentication**: `POST /api/auth/login`, `POST /api/auth/register`
-- **Profile**: `GET /api/profile/me`, `PUT /api/profile/me`
-- **Business Plans**: `GET /api/business-plans`, `POST /api/business-plans`
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Build Failures**
-   - Check Maven dependencies in `pom.xml`
-   - Ensure Java 17 compatibility
-   - Verify environment variables are set
-
-2. **Runtime Errors**
-   - Check application logs: `railway logs`
-   - Verify Supabase connection
-   - Ensure JWT secret is properly configured
-
-3. **Database Connection Issues**
-   - Verify Supabase URL and keys
-   - Check network connectivity
-   - Ensure RLS policies are configured
-
-### Environment Variable Validation
-
-Test your configuration locally first:
-```bash
-# Set environment variables
-export SUPABASE_URL=your_supabase_url
-export SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-export JWT_SECRET=your_jwt_secret
-
-# Run locally
-mvn spring-boot:run
-```
-
-## Security Considerations
-
-1. **Never commit sensitive data** to repository
-2. **Use Railway environment variables** for all secrets
-3. **Configure CORS** properly for your frontend domain
-4. **Enable RLS** on Supabase tables
-5. **Use HTTPS** (Railway provides SSL automatically)
-
-## Monitoring
-
-- **Railway Dashboard**: Monitor resource usage and logs
-- **Application Health**: Implement health check endpoints
-- **Error Tracking**: Consider integrating Sentry or similar
-- **Performance**: Monitor response times and database queries
-
-## Scaling
-
-Railway automatically scales based on usage:
-- **CPU**: Scales with request load
-- **Memory**: Configure in Railway dashboard
-- **Database**: Supabase handles scaling separately
-
-## Backup Strategy
-
-- **Database**: Use Supabase backup features
-- **Application Code**: Version control with Git
-- **Configuration**: Document in this deployment guide
